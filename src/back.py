@@ -5,7 +5,7 @@ import numpy as np
 
 # Load the model
 model = xgb.Booster()
-model.load_model("./xgboost-best.model")
+model.load_model("src/xgboost-best.model")
 
 app = FastAPI()
 
