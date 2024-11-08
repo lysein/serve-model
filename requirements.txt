@@ -1,3 +1,7 @@
 fastapi==0.112.2
 streamlit==1.39.0
 xgboost==2.1.2
+uvicorn==0.30.6
+pydantic==2.8.2
+pillow==10.4.0
+requests==2.28.2
