@@ -2,6 +2,9 @@ import streamlit as st
 import requests
 from pydantic import BaseModel
 from PIL import Image
+import subprocess
+import time
+import os
 
 class InputData(BaseModel):
     bar: float
@@ -24,6 +27,13 @@ class InputData(BaseModel):
     year: float
     day_of_week: float
     is_weekend: float
+
+# Start FastAPI server
+if "backend_running" not in st.session_state:
+    process = subprocess.Popen(["uvicorn", "back:app", "--host", "127.0.0.1", "--port", "8000"])
+    st.session_state.backend_running = True
+    # Allow some time for the server to start
+    time.sleep(2)
 
 st.title("XGBoost Model Prediction")
 
@@ -69,9 +79,12 @@ input_data = InputData(
 
 # Prediction button and response handling
 if st.button("Predict"):
-    response = requests.post("http://127.0.0.1:8000/predict", json=input_data.dict())
-    if response.status_code == 200:
-        prediction = response.json().get("prediction", "No prediction returned")
-        st.success(f"Prediction: {prediction}")
-    else:
-        st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+    try:
+        response = requests.post("http://127.0.0.1:8000/predict", json=input_data.dict())
+        if response.status_code == 200:
+            prediction = response.json().get("prediction", "No prediction returned")
+            st.success(f"Prediction: {prediction}")
+        else:
+            st.error(f"Error: {response.json().get('detail', 'Unknown error')}")
+    except requests.exceptions.ConnectionError:
+        st.error("Could not connect to the FastAPI server.")
