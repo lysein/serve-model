@@ -30,7 +30,7 @@ class InputData(BaseModel):
 
 # Start FastAPI server
 if "backend_running" not in st.session_state:
-    process = subprocess.Popen(["uvicorn", "back:app", "--host", "127.0.0.1", "--port", "8000"])
+    process = subprocess.Popen(["uvicorn", "src.back:app", "--host", "127.0.0.1", "--port", "8000"])
     st.session_state.backend_running = True
     # Allow some time for the server to start
     time.sleep(2)
